@@ -25,6 +25,18 @@ const _knownOpenAIChatModels: ManualMappings = [
     benchmark: { cbaElo: 1277, cbaMmlu: 82.0 },
   },
   {
+    idPrefix: 'chatgpt-4o-latest',
+    label: 'chatgpt-4o-latest-one',
+    description: 'Advanced, multimodal flagship model that鈥檚 cheaper and faster than GPT-4 Turbo.',
+    contextWindow: 128000,
+    maxCompletionTokens: 16384,
+    trainingDataCutoff: 'Oct 2023',
+    interfaces: [LLM_IF_OAI_Chat, LLM_IF_OAI_Vision, LLM_IF_OAI_Fn, LLM_IF_OAI_Json],
+    pricing: { chatIn: 5, chatOut: 15 },
+    benchmark: { cbaElo: 1286 },
+    hidden: true,
+  },
+  {
     idPrefix: 'gpt-4o-mini',
     label: 'GPT-4o mini',
     description: 'Currently points to gpt-4o-mini-2024-07-18.',
@@ -69,7 +81,7 @@ const _knownOpenAIChatModels: ManualMappings = [
   {
     idPrefix: 'gpt-4o-2024-05-13',
     label: 'GPT-4o (2024-05-13)',
-    description: 'Advanced, multimodal flagship model that’s cheaper and faster than GPT-4 Turbo.',
+    description: 'Advanced, multimodal flagship model that鈥檚 cheaper and faster than GPT-4 Turbo.',
     contextWindow: 128000,
     maxCompletionTokens: 4096,
     trainingDataCutoff: 'Oct 2023',
@@ -664,7 +676,7 @@ const _knownMistralChatModels: ManualMappings = [
 ];
 
 const mistralModelFamilyOrder = [
-  'codestral', 'mistral-large', 'open-mixtral-8x22b', 'mistral-medium', 'open-mixtral-8x7b', 'mistral-small', 'open-mistral-7b', 'mistral-tiny', 'mistral-embed', '🔗',
+  'codestral', 'mistral-large', 'open-mixtral-8x22b', 'mistral-medium', 'open-mixtral-8x7b', 'mistral-small', 'open-mistral-7b', 'mistral-tiny', 'mistral-embed', '馃敆',
 ];
 
 export function mistralModelToModelDescription(_model: unknown): ModelDescriptionSchema {
@@ -680,8 +692,8 @@ export function mistralModelToModelDescription(_model: unknown): ModelDescriptio
 }
 
 export function mistralModelsSort(a: ModelDescriptionSchema, b: ModelDescriptionSchema): number {
-  if (a.label.startsWith('🔗') && !b.label.startsWith('🔗')) return 1;
-  if (!a.label.startsWith('🔗') && b.label.startsWith('🔗')) return -1;
+  if (a.label.startsWith('馃敆') && !b.label.startsWith('馃敆')) return 1;
+  if (!a.label.startsWith('馃敆') && b.label.startsWith('馃敆')) return -1;
   const aPrefixIndex = mistralModelFamilyOrder.findIndex(prefix => a.id.startsWith(prefix));
   const bPrefixIndex = mistralModelFamilyOrder.findIndex(prefix => b.id.startsWith(prefix));
   if (aPrefixIndex !== -1 && bPrefixIndex !== -1) {
@@ -763,9 +775,9 @@ export function openRouterModelToModelDescription(wireModel: object): ModelDescr
   const seemsFree = pricing.chatIn === 0 && pricing.chatOut === 0;
 
   // openrouter provides the fields we need as part of the model object
-  let label = model.name || model.id.replace('/', ' · ');
+  let label = model.name || model.id.replace('/', ' 路 ');
   if (seemsFree)
-    label += ' · 🎁'; // Free? Discounted?
+    label += ' 路 馃巵'; // Free? Discounted?
 
   // hidden: hide by default older models or models not in known families
   const hidden = orOldModelIDs.includes(model.id) || !orModelFamilyOrder.some(prefix => model.id.startsWith(prefix));
@@ -833,7 +845,7 @@ export function togetherAIModelsToModelDescriptions(wireModels: unknown): ModelD
   function togetherAIModelToModelDescription(model: { id: string, created: number }) {
     return fromManualMapping(_knownTogetherAIChatModels, model.id, model.created, undefined, {
       idPrefix: model.id,
-      label: model.id.replaceAll('/', ' · ').replaceAll(/[_-]/g, ' '),
+      label: model.id.replaceAll('/', ' 路 ').replaceAll(/[_-]/g, ' '),
       description: 'New Togehter AI Model',
       contextWindow: null, // unknown
       interfaces: [LLM_IF_OAI_Chat], // assume..
@@ -870,7 +882,7 @@ const _knownPerplexityChatModels: ModelDescriptionSchema[] = [
   },
   {
     id: 'llama-3-sonar-small-32k-online',
-    label: 'Sonar Small Online 🌐',
+    label: 'Sonar Small Online 馃寪',
     description: 'Llama 3 Sonar Small 32k Online',
     contextWindow: 28000,
     interfaces: [LLM_IF_OAI_Chat],
@@ -884,7 +896,7 @@ const _knownPerplexityChatModels: ModelDescriptionSchema[] = [
   },
   {
     id: 'llama-3-sonar-large-32k-online',
-    label: 'Sonar Large Online 🌐',
+    label: 'Sonar Large Online 馃寪',
     description: 'Llama 3 Sonar Large 32k Online',
     contextWindow: 28000,
     interfaces: [LLM_IF_OAI_Chat],
@@ -941,7 +953,7 @@ const _knownGroqModels: ManualMappings = [
   {
     isLatest: true,
     idPrefix: 'llama-3.1-405b-reasoning',
-    label: 'Llama 3.1 · 405B',
+    label: 'Llama 3.1 路 405B',
     description: 'LLaMA 3.1 405B developed by Meta with a context window of 131,072 tokens. Supports tool use.',
     contextWindow: 131072,
     maxCompletionTokens: 8000,
@@ -950,7 +962,7 @@ const _knownGroqModels: ManualMappings = [
   {
     isLatest: true,
     idPrefix: 'llama-3.1-70b-versatile',
-    label: 'Llama 3.1 · 70B',
+    label: 'Llama 3.1 路 70B',
     description: 'LLaMA 3.1 70B developed by Meta with a context window of 131,072 tokens. Supports tool use.',
     contextWindow: 131072,
     maxCompletionTokens: 8000,
@@ -959,7 +971,7 @@ const _knownGroqModels: ManualMappings = [
   {
     isLatest: true,
     idPrefix: 'llama-3.1-8b-instant',
-    label: 'Llama 3.1 · 8B',
+    label: 'Llama 3.1 路 8B',
     description: 'LLaMA 3.1 8B developed by Meta with a context window of 131,072 tokens. Supports tool use.',
     contextWindow: 131072,
     maxCompletionTokens: 8000,
@@ -967,21 +979,21 @@ const _knownGroqModels: ManualMappings = [
   },
   {
     idPrefix: 'llama3-groq-70b-8192-tool-use-preview',
-    label: 'Llama 3 Groq · 70B Tool Use',
+    label: 'Llama 3 Groq 路 70B Tool Use',
     description: 'LLaMA 3 70B Tool Use developed by Groq with a context window of 8,192 tokens. Optimized for tool use.',
     contextWindow: 8192,
     interfaces: [LLM_IF_OAI_Chat, LLM_IF_OAI_Fn],
   },
   {
     idPrefix: 'llama3-groq-8b-8192-tool-use-preview',
-    label: 'Llama 3 Groq · 8B Tool Use',
+    label: 'Llama 3 Groq 路 8B Tool Use',
     description: 'LLaMA 3 8B Tool Use developed by Groq with a context window of 8,192 tokens. Optimized for tool use.',
     contextWindow: 8192,
     interfaces: [LLM_IF_OAI_Chat, LLM_IF_OAI_Fn],
   },
   {
     idPrefix: 'llama3-70b-8192',
-    label: 'Llama 3 · 70B',
+    label: 'Llama 3 路 70B',
     description: 'LLaMA3 70B developed by Meta with a context window of 8,192 tokens. Supports tool use.',
     contextWindow: 8192,
     interfaces: [LLM_IF_OAI_Chat, LLM_IF_OAI_Fn],
@@ -990,7 +1002,7 @@ const _knownGroqModels: ManualMappings = [
   },
   {
     idPrefix: 'llama3-8b-8192',
-    label: 'Llama 3 · 8B',
+    label: 'Llama 3 路 8B',
     description: 'LLaMA3 8B developed by Meta with a context window of 8,192 tokens. Supports tool use.',
     contextWindow: 8192,
     interfaces: [LLM_IF_OAI_Chat, LLM_IF_OAI_Fn],
@@ -1006,14 +1018,14 @@ const _knownGroqModels: ManualMappings = [
   },
   {
     idPrefix: 'gemma2-9b-it',
-    label: 'Gemma 2 · 9B Instruct',
+    label: 'Gemma 2 路 9B Instruct',
     description: 'Gemma 2 9B developed by Google with a context window of 8,192 tokens. Supports tool use.',
     contextWindow: 8192,
     interfaces: [LLM_IF_OAI_Chat, LLM_IF_OAI_Fn],
   },
   {
     idPrefix: 'gemma-7b-it',
-    label: 'Gemma 1.1 · 7B Instruct',
+    label: 'Gemma 1.1 路 7B Instruct',
     description: 'Gemma 7B developed by Google with a context window of 8,192 tokens. Supports tool use.',
     contextWindow: 8192,
     interfaces: [LLM_IF_OAI_Chat],
@@ -1070,7 +1082,7 @@ function fromManualMapping(mappings: ManualMappings, id: string, created?: numbe
   // label for symlinks
   let label = known.label;
   if (known.symLink && id === known.idPrefix)
-    label = `🔗 ${known.label} → ${known.symLink/*.replace(known.idPrefix, '')*/}`;
+    label = `馃敆 ${known.label} 鈫?${known.symLink/*.replace(known.idPrefix, '')*/}`;
 
   // check whether this is a partial map, which indicates an unknown/new variant
   const suffix = id.slice(known.idPrefix.length).trim();
@@ -1080,8 +1092,8 @@ function fromManualMapping(mappings: ManualMappings, id: string, created?: numbe
     id,
     label: label
       + (suffix ? ` [${suffix.replaceAll('-', ' ').trim()}]` : '')
-      + (known.isLatest ? ' 🌟' : '')
-      + (known.isLegacy ? /*' 💩'*/ ' [legacy]' : ''),
+      + (known.isLatest ? ' 馃専' : '')
+      + (known.isLegacy ? /*' 馃挬'*/ ' [legacy]' : ''),
     created: created || 0,
     updated: updated || created || 0,
     description: known.description,
